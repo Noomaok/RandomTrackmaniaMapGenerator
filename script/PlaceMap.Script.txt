@@ -1,0 +1,125 @@
+#RequireContext CEditorPlugin
+#Include "MathLib" as MathLib
+#Include "TextLib" as TextLib
+
+Text CreateManialink(Boolean BlocksOptions)
+{
+	declare Text textMap for ManialinkPage;
+	
+	declare MLText =
+	"""
+		<script><!--
+		 	#Include "TextLib" as TextLib
+			
+			Void OnChangeSettingsDisplay()	{ declare Boolean showSettingsOptions for Page; showSettingsOptions = True; }
+			Void OnClickGenerateTerrain() { declare Boolean doPlaceBlock for Page; doPlaceBlock = True; }
+			
+			main () {
+			declare Boolean BlocksOptions for Page;
+				while(True) {
+					yield;
+					if(BlocksOptions)
+					{
+							declare Text textMap for Page;
+							declare TMap <=> (Page.GetFirstChild("TMap") as CMlEntry);
+							if(TMap != Null)
+								textMap = TMap.Value;
+					}
+			
+					foreach(Event in PendingEvents) {
+						if(Event.Type == CMlEvent::Type::MouseClick)
+						{
+								if(Event.ControlId == "qadGenerateTerrainSettings"||Event.ControlId == "HelpOkQuad")
+									OnChangeSettingsDisplay();
+								if(Event.ControlId == "qadGenerateTerrain")
+									OnClickGenerateTerrain();									
+						}
+					}
+				}
+			}
+		--></script>
+		<frame>
+			<quad posn="130 25 -1" sizen="20 10" style="Bgs1" substyle="BgList" ScriptEvents="1"/>
+				<label id="lblGenerateTerrain" text="Place Map" posn="140 24"  halign="center" valign="center" style="Red" textsize="0.7"/>
+				<quad id="qadGenerateTerrain" posn="131 20 1" sizen="10 10" valign="center" style="UIConstructionSimple_Buttons" substyle="BlockEditor" ScriptEvents="1"/>
+				<quad id="qadGenerateTerrainSettings" posn="140 20 1" sizen="8 8" valign="center" style="UIConstructionSimple_Buttons" substyle="Tools" ScriptEvents="1"/>
+			
+	""";
+	if(BlocksOptions)
+	{
+		MLText ^=
+		"""
+			<quad id="qadSettinsTitle" posn="0 50 -1" sizen="80 15" halign="center" valign="center" style="Bgs1InRace" substyle="BgTitle3_1"/>
+			<label id="lblSettinsTitle" text="Noom Map Placer" posn="0 50" halign="center" valign="center" style="TextTitle3"/>
+			
+			<quad id="qadSettings" posn="0 43 -2" sizen="100 30" halign="center" valign="top" style="Bgs1" substyle="BgList"/>
+				
+				<label id="lblXNumBlocks" text="Map String" posn="-35 35" valign="center" textsize="2"/>
+				<entry id="TMap" default="{{{textMap}}}" posn="5 35" sizen="30 3.5" halign="left" valign="center" textsize="2"/>
+			
+				<quad id="HelpOkQuad" posn="0 25 -1" sizen="30 6" halign="center" valign="center" style="Bgs1" substyle="BgCard" ScriptEvents="1"/>
+				<label id="HelpOkLabel" text="OK" posn="0 25" halign="center" valign="center" style="TextButtonSmall" textsize="2"/>
+			
+		""";
+	}
+	MLText ^=
+	"""
+		</frame>
+	""";
+	return MLText;
+}
+
+::CardinalDirections getDirection(Integer numDir) {
+	declare Directions = [
+		::CardinalDirections::North,
+		::CardinalDirections::East,
+		::CardinalDirections::South,
+		::CardinalDirections::West
+	];
+	return Directions[numDir];
+}
+
+main()
+{
+
+	/**
+	 *Some general generation configurations
+	 **/
+	declare Text textMap for ManialinkPage=""" """;
+
+	/**
+	 *Interface variables
+	 **/
+	declare showSettingsOptions for ManialinkPage=False;
+	declare BlocksOptions  for ManialinkPage=False;
+	declare doPlaceBlock for ManialinkPage=False;
+	ManialinkText=CreateManialink(False);
+	
+	while(True)
+	{
+		yield;
+		// change help display if necessary
+		if(showSettingsOptions)
+		{
+			showSettingsOptions = False;
+			BlocksOptions = !BlocksOptions;
+			ManialinkText = CreateManialink(BlocksOptions);
+		}
+		if(doPlaceBlock)
+		{
+			doPlaceBlock=False;
+			RemoveAllBlocks();
+			declare Text[] mapInfo = TextLib::Split("""/""", textMap);
+			declare Integer i = 0;
+			
+			while(i < mapInfo.count)
+			{
+				PlaceMode = ::PlaceMode::Block;
+      	declare PlacedBlock = PlaceBlock(BlockModels[TextLib::ToInteger(mapInfo[i+3])], <TextLib::ToInteger(mapInfo[i]),TextLib::ToInteger(mapInfo[i+1]),TextLib::ToInteger(mapInfo[i+2])>, getDirection(TextLib::ToInteger(mapInfo[i+4])));
+				if (PlacedBlock) yield;
+				
+				i = i + 5;
+			}
+		}
+	}
+}
