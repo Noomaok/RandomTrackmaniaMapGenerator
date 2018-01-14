@@ -23,13 +23,23 @@ public class Generator extends JFrame implements ActionListener{
     
     private final int MAP_SIZE = 32;
 
-    private Blocks[] blockList;
+    private Block[] blockList;
     private JButton generate;
     private JSlider lengthMap;
     private JLabel curLengthMap;
     private JTextArea mapTextArea;
+    private boolean[][][] map = new boolean[32][39][32];
 
     public Generator(){
+        //Fill boolean map with false => no block placed
+        for(int i = 0; i<map.length; i++){
+            for(int j = 0; j<map[0].length; j++){
+                for(int k = 0; k<map[0][0].length; k++){
+                    map[i][j][k] = false;
+                }
+            }
+        }
+
         //Create fenetre
         this.setTitle("Map Generator");
         this.setSize(400,150);
@@ -91,14 +101,19 @@ public class Generator extends JFrame implements ActionListener{
             while(sc.hasNextLine()){
                 String s = sc.nextLine();
                 blockStringLoad.add(s);
-            }      
+            }
+            sc.close();    
         } catch(FileNotFoundException e) {
             e.printStackTrace();
         }
 
         for (int i = 0; i < blockStringLoad.size(); i++) {
             String[] bInfo = blockStringLoad.get(i).split("/");
-            blockList[i] = new Blocks(Double.parseDouble(bInfo[0]), Double.parseDouble(bInfo[1]), Double.parseDouble(bInfo[2]), Integer.parseInt(bInfo[3]), Integer.parseInt(bInfo[4]), Integer.parseInt(bInfo[5]));
+            Vector3D spaceOccupied = new Vector3D(bInfo[0]);
+            Vector3D placementPoint = new Vector3D(bInfo[1]);
+            Vector3D vectorEntry = new Vector3D(bInfo[2]);
+            Vector3D vectorExit = new Vector3D(bInfo[3]);
+            blockList[i] = new Block(spaceOccupied,placementPoint,vectorEntry,vectorExit);
         }
         
         //Load presets
@@ -111,15 +126,34 @@ public class Generator extends JFrame implements ActionListener{
 
     public void generateMap(){
         String mapStringExpression = "";
+        int currentX;
+        int currentY;
+        int currentZ;
+        int currentDir;
 
         //Generate random start
-        int x = (int)(Math.random()*(MAP_SIZE-1))+1;
-        int y = (int)(Math.random()*(7))+9;
-        int z = (int)(Math.random()*(MAP_SIZE-1))+1;
-        int orient = (int)(Math.random()*(4));
+        currentX = (int)(Math.random()*(MAP_SIZE-1))+1;
+        currentY = (int)(Math.random()*(30))+9;
+        currentZ = (int)(Math.random()*(MAP_SIZE-1))+1;
+        currentDir = (int)(Math.random()*(4));
 
-        mapStringExpression += x+"/"+y+"/"+z+"/"+9+"/"+orient;
+        map[currentX][currentY][currentZ] = true;
+
+        mapStringExpression +=currentX+"/"+currentY+"/"+currentZ+"/"+9+"/"+currentDir;
+
+        //while map length not done add blocks
+        int i = 0;
+        while(i<1){
+            i++;
+            int r = (int)(Math.random()*blockList.size);
+            Block blockToPlace = blockList[r];
+            
+            //Verif place
+
+        }
 
         mapTextArea.setText(mapStringExpression);
     }
+
+    
 }
