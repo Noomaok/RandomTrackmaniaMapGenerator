@@ -107,13 +107,14 @@ public class Generator extends JFrame implements ActionListener{
             e.printStackTrace();
         }
 
+        blockList = new Block[blockStringLoad.size()];
+
         for (int i = 0; i < blockStringLoad.size(); i++) {
             String[] bInfo = blockStringLoad.get(i).split("/");
-            Vector3D spaceOccupied = new Vector3D(bInfo[0]);
-            Vector3D placementPoint = new Vector3D(bInfo[1]);
-            Vector3D vectorEntry = new Vector3D(bInfo[2]);
-            Vector3D vectorExit = new Vector3D(bInfo[3]);
-            blockList[i] = new Block(spaceOccupied,placementPoint,vectorEntry,vectorExit);
+            Vector3D extremPoint = new Vector3D(bInfo[0]);
+            Vector3D vectorEntry = new Vector3D(bInfo[1]);
+            Vector3D vectorExit = new Vector3D(bInfo[2]);
+            blockList[i] = new Block(extremPoint,vectorEntry,vectorExit,bInfo[3],Integer.parseInt(bInfo[4]));
         }
         
         //Load presets
@@ -141,12 +142,26 @@ public class Generator extends JFrame implements ActionListener{
 
         mapStringExpression +=currentX+"/"+currentY+"/"+currentZ+"/"+9+"/"+currentDir;
 
+        /*
+        currentX = (int)(Math.random()*(MAP_SIZE-1))+1;
+        currentY = (int)(Math.random()*(30))+9;
+        currentZ = (int)(Math.random()*(MAP_SIZE-1))+1;
+        currentDir = (int)(Math.random()*(4));
+
+        mapStringExpression +="/"+currentX+"/"+currentY+"/"+currentZ+"/"+blockList[0].getId()+"/"+currentDir;
+        */
+        
         //while map length not done add blocks
         int i = 0;
         while(i<1){
             i++;
-            int r = (int)(Math.random()*blockList.size);
+            int r = (int)(Math.random()*blockList.length);
             Block blockToPlace = blockList[r];
+
+            Vector3D vectPos = updatePosition(currentX, currentY, currentZ, currentDir);
+            currentX = (Integer)vectPos.getX();
+            currentY = (Integer)vectPos.getY();
+            currentZ = (Integer)vectPos.getZ();
             
             //Verif place
 
@@ -155,5 +170,26 @@ public class Generator extends JFrame implements ActionListener{
         mapTextArea.setText(mapStringExpression);
     }
 
+    public Vector3D updatePosition(int currentX, int currentY, int currentZ, int currentDir){
+        switch(currentDir){
+            case 0:
+                currentZ++;
+                break;
+            case 1:
+                currentX--;
+                break;
+            case 2:
+                currentZ--;
+                break;
+            case 3:
+                currentX++;
+                break;
+            default:
+                break;
+        }
+
+        Vector3D newVector = new Vector3D(currentX, currentY, currentZ);
+        return newVector;
+    }
     
 }

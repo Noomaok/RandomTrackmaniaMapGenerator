@@ -11,7 +11,7 @@ public class Vector3D{
     }
 
     public Vector3D(String s){
-        String[] values = s.split("-");
+        String[] values = s.split("_");
         this.x = Double.parseDouble(values[0]);
         this.y = Double.parseDouble(values[1]);
         this.z = Double.parseDouble(values[2]);
@@ -21,15 +21,15 @@ public class Vector3D{
         this(values[0],values[1],values[2]);
     }
 
-    public double getX(){
-        return x;
+    public Vector3D(int xValue, int yValue, int zValue){
+        this.x = (Double)(xValue);
+        this.y = (Double)(yValue);
+        this.z = (Double)(zValue);
     }
 
-    public double getY(){
-        return y;
-    }
+    public double getX(){return x;}
 
-    public double getZ(){
-        return z;
-    }
+    public double getY(){return y;}
+
+    public double getZ(){return z;}
 }
