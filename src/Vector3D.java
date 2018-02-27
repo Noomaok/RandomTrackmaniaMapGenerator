@@ -22,9 +22,9 @@ public class Vector3D{
     }
 
     public Vector3D(int xValue, int yValue, int zValue){
-        this.x = (Double)(xValue);
-        this.y = (Double)(yValue);
-        this.z = (Double)(zValue);
+        this.x = (double)(xValue);
+        this.y = (double)(yValue);
+        this.z = (double)(zValue);
     }
 
     public double getX(){return x;}

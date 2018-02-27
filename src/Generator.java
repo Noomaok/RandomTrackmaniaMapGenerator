@@ -159,9 +159,9 @@ public class Generator extends JFrame implements ActionListener{
             Block blockToPlace = blockList[r];
 
             Vector3D vectPos = updatePosition(currentX, currentY, currentZ, currentDir);
-            currentX = (Integer)vectPos.getX();
-            currentY = (Integer)vectPos.getY();
-            currentZ = (Integer)vectPos.getZ();
+            currentX = (int)(vectPos.getX());
+            currentY = (int)(vectPos.getY());
+            currentZ = (int)(vectPos.getZ());
             
             //Verif place
 
