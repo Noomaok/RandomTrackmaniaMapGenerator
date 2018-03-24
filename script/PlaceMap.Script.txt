@@ -115,7 +115,7 @@ main()
 			while(i < mapInfo.count)
 			{
 				PlaceMode = ::PlaceMode::Block;
-      	declare PlacedBlock = PlaceBlock(BlockModels[TextLib::ToInteger(mapInfo[i+3])], <TextLib::ToInteger(mapInfo[i]),TextLib::ToInteger(mapInfo[i+1]),TextLib::ToInteger(mapInfo[i+2])>, getDirection(TextLib::ToInteger(mapInfo[i+4])));
+				declare PlacedBlock = PlaceBlock(GetBlockModelFromName(mapInfo[i+3]), <TextLib::ToInteger(mapInfo[i]),TextLib::ToInteger(mapInfo[i+1]),TextLib::ToInteger(mapInfo[i+2])>, getDirection(TextLib::ToInteger(mapInfo[i+4])));
 				if (PlacedBlock) yield;
 				
 				i = i + 5;
