@@ -1,12 +1,12 @@
 public class Block{
 
-    private Vector3D extremPoint;
-    private Vector3D vectEntry;
-    private Vector3D vectExit;
+    private Point3D extremPoint;
+    private Point3D vectEntry;
+    private Point3D vectExit;
     private boolean[][][] spaceOccupied;
     private int blockId;
 
-    public Block(Vector3D exPoint, Vector3D vEntry, Vector3D vExit, String spaceString, int idBlock){
+    public Block(Point3D exPoint, Point3D vEntry, Point3D vExit, String spaceString, int idBlock){
         this.extremPoint = exPoint;
         this.vectEntry = vEntry;
         this.vectExit = vExit;
@@ -25,8 +25,8 @@ public class Block{
         }
     }
 
-    public Vector3D getEntry(){return vectEntry;}
-    public Vector3D getExit(){return vectExit;}
-    public Vector3D getExtrem(){return extremPoint;}
+    public Point3D getEntry(){return vectEntry;}
+    public Point3D getExit(){return vectExit;}
+    public Point3D getExtrem(){return extremPoint;}
     public int getId(){return blockId;}
 }
